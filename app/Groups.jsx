@@ -34,17 +34,18 @@ var Groups = React.createClass({
   componentDidMount: function() {
     var component = this;
     component.serverRequest = Adal.adalRequest({
-      url: 'https://graph.microsoft.com/v1.0/me/memberOf?$top=500',
+      // url: 'https://graph.microsoft.com/v1.0/me/memberOf?$top=500',
+      url: 'https://graph.microsoft.com/v1.0/me/',
       headers: {
         'Accept': 'application/json;odata.metadata=full'
       }
     }).then(function(data) {
       var myGroups = [];
-
+      console.log("groups", data);
       data.value.forEach(function(groupInfo) {
-        // workaround as the rest filter for unified groups doesn't seem to work client-side
-        if (groupInfo.groupTypes &&
-          groupInfo.groupTypes.indexOf('Unified') > -1) {
+        console.log("groupInfo.groupTypes", groupInfo["@odata.type"]);
+       // workaround as the rest filter for unified groups doesn't seem to work client-side
+        if (groupInfo["@odata.type"] ) {
           myGroups.push({
             id: groupInfo.id,
             odataId: groupInfo['@odata.id'],
@@ -73,7 +74,7 @@ var Groups = React.createClass({
           });
         }
       }, this);
-
+      console.log("set state",myGroups);
       component.setState({
         loading: false,
         groups: myGroups

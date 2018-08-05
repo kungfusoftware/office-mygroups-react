@@ -12,7 +12,7 @@ var App = React.createClass({
     return (
       <div>
         <h1 className="ms-font-xxl">My groups</h1>
-        <Groups />
+      <Groups /> 
       </div>
     );
   }

@@ -35,6 +35,7 @@ var processAdalCallback = function () {
         if (requestInfo.requestType === _adal.REQUEST_TYPE.RENEW_TOKEN) {
           // Idtoken or Accestoken can be renewed
           if (requestInfo.parameters['access_token']) {
+            console.log("access_token: ",  requestInfo.parameters['access_token']);
             callback(_adal._getItem(_adal.CONSTANTS.STORAGE.ERROR_DESCRIPTION), requestInfo.parameters['access_token']);
             return;
           }
