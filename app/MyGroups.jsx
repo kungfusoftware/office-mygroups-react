@@ -1,37 +1,39 @@
-var React = require('react');
-var Adal = require('./adal/adal-request');
-var Loading = require('./Loading.jsx');
-var Group = require('./Group.jsx');
-var q = require('q');
+import React  from 'react';
+import Adal from './adal/adal-request';
+import Loading  from './Loading.jsx';
+import MyGroup from './MyGroup.jsx';
+import  q from 'q';
 
-function getGroupPicture(groupId) {
-  var deferred = q.defer();
+class MyGroups extends React.Component {
+    constructor(props) {
+      super(props);
+  
+      this.state = {
+        loading: true,
+        groups: []
+      };
+    }
 
-  Adal.adalRequest({
-    url: 'https://graph.microsoft.com/v1.0/groups/' + groupId + '/photo/$value',
-    dataType: 'blob'
-  }).then(function(image) {
-    var url = window.URL || window.webkitURL;
-    deferred.resolve({
-      id: groupId,
-      url: url.createObjectURL(image)
-    });
-  }, function(err) {
-    deferred.reject(err);
-  });
+     getGroupPicture(groupId) {
+        var deferred = q.defer();
+      
+        Adal.adalRequest({
+          url: 'https://graph.microsoft.com/v1.0/groups/' + groupId + '/photo/$value',
+          dataType: 'blob'
+        }).then(function(image) {
+          var url = window.URL || window.webkitURL;
+          deferred.resolve({
+            id: groupId,
+            url: url.createObjectURL(image)
+          });
+        }, function(err) {
+          deferred.reject(err);
+        });
+      
+        return deferred.promise;
+      }
 
-  return deferred.promise;
-}
-
-var Groups = React.createClass({
-  getInitialState: function() {
-    return {
-      loading: true,
-      groups: []
-    };
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     var component = this;
     component.serverRequest = Adal.adalRequest({
       // url: 'https://graph.microsoft.com/v1.0/me/memberOf?$top=500',
@@ -43,7 +45,6 @@ var Groups = React.createClass({
       var myGroups = [];
       console.log("groups", data);
       data.value.forEach(function(groupInfo) {
-        console.
         console.log("groupInfo.groupTypes", groupInfo["@odata.type"]);
        // workaround as the rest filter for unified groups doesn't seem to work client-side
         if (groupInfo["@odata.type"] ) {
@@ -80,14 +81,14 @@ var Groups = React.createClass({
         loading: false,
         groups: myGroups
       })
-    }.bind(component));
-  },
+    });
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     this.serverRequest.abort();
-  },
+  }
 
-  render: function() {
+  render() {
     var items = this.state.groups.map(function(group) {
       return (
         <div className="ms-Grid-col ms-u-sm3" key={group.id}>
@@ -109,6 +110,9 @@ var Groups = React.createClass({
       </div>
     );
   }
-});
 
-module.exports = Groups;
+
+}
+
+
+module.exports = MyGroups;

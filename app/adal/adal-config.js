@@ -1,6 +1,6 @@
 var adalConfig = {
     tenant: 'bahdev.onmicrosoft.com',
-    clientId: '610a5f5d-9b9e-4bd6-9432-49e94027087c',
+    clientId: 'xxxxxxx-9b9e-4bd6-9432-49e94027087c',
     extraQueryParameter: 'nux=1',
     disableRenewal: false,
     endpoints: {
